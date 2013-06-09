@@ -8,25 +8,32 @@ import android.os.Parcelable;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 	private ViewPager mPager;//页卡内容
-	private List<View> listViews; //Tab页面列表
+	private ArrayList<Fragment> listViews; //Tab页面列表
 	private ImageView cursor;//动画图片
 	private TextView t1, t2, t3;//页卡头标
 	private int offset = 0;//动画图片偏移量
 	private int currIndex = 0;//当前页卡编号
 	private int bmpW;//动画图片宽度
+	OneFragment oneFragment=new OneFragment();
+	TWOFragment twoFragment=new TWOFragment();
+	THREEFragment thrFragment=new THREEFragment();
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,12 +68,18 @@ public class MainActivity extends Activity {
 	*/
 	private void InitViewPager() {
 	mPager = (ViewPager) findViewById(R.id.vPager);
-	listViews = new ArrayList<View>();
-	LayoutInflater mInflater = getLayoutInflater();
+	listViews = new ArrayList<Fragment>();
+/*	LayoutInflater mInflater = getLayoutInflater();
 	listViews.add(mInflater.inflate(R.layout.one, null));
 	listViews.add(mInflater.inflate(R.layout.two, null));
-	listViews.add(mInflater.inflate(R.layout.three, null));
-	mPager.setAdapter(new MyPagerAdapter(listViews));
+	listViews.add(mInflater.inflate(R.layout.three, null));*/
+	listViews.add(oneFragment);
+	listViews.add(twoFragment);
+	listViews.add(thrFragment);
+	//用support包，只能用getSupportFragmentManager();
+	FragmentManager fragmentManager =this.getSupportFragmentManager();
+	//通过fragment适配器把fragment添加入viewpager中
+	mPager.setAdapter(new MainFragmentPagerAdapter(fragmentManager,listViews));
 	mPager.setCurrentItem(0);
 	mPager.setOnPageChangeListener(new MyOnPageChangeListener());
 	}
